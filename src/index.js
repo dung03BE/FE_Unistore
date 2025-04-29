@@ -3,7 +3,7 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { BrowserRouter } from "react-router-dom";
+import { HashRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import { store, persistor } from "./store"; // Import store từ Redux Persist
 import { PersistGate } from "redux-persist/integration/react";
@@ -36,9 +36,9 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Provider store={store}>
     <PersistGate loading={null} persistor={persistor}>
-      <BrowserRouter>
+      <HashRouter >
         <App />
-      </BrowserRouter>
+      </HashRouter >
     </PersistGate>
   </Provider>
 );

@@ -1,0 +1,14 @@
+.product-carousel {
+    margin-top: 20px;
+    margin-bottom: 30px;
+    width: 100%; /* Chiều rộng slider */
+    
+    
+    .carousel-image {
+        width: 100%; /* Ảnh phủ toàn bộ chiều rộng container */
+        max-height: 300px; /* Giới hạn chiều cao */
+        object-fit: contain; /* Đảm bảo ảnh giữ nguyên tỷ lệ gốc */
+        border-radius: 10px; /* Bo góc */
+        background-color: #f5f5f5; /* Màu nền nếu ảnh không phủ đầy */
+    }
+}

@@ -1,0 +1,38 @@
+/* ChatRoom.scss */
+.chat-room {
+   
+    .messages {
+        .mb-2 {
+            .d-flex {
+                align-items: center; /* Thay đổi align-items thành center */
+            }
+            .mr-2 {
+                margin-right: 8px;
+            }
+            .small {
+                font-size: 0.8rem;
+            }
+            .font-weight-bold {
+                margin-top:20px;
+            }
+        }
+    }
+    form {
+        display: flex;
+        align-items: center;
+        gap: 10px; /* Điều chỉnh khoảng cách giữa input và button */
+        
+    }
+    .flex-1 {
+        width: 500px;
+        
+        border: 2px solid rgba(0, 0, 0, 0.2); // Viền mờ nhạt
+        border-radius: 5px;
+        outline: none;
+        transition: 0.3s;
+        &:focus {
+            border-color: rgba(158, 34, 34, 0.5); // Viền đậm hơn khi focus
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2); // Hiệu ứng mờ xung quanh
+          }
+    }
+}

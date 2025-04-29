@@ -1,0 +1,224 @@
+* {
+    font-family: 'Times New Roman', Times, serif;
+    font-size: 22px
+}
+.product {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: space-around;
+    cursor: pointer;
+
+    &__item {
+        width: 22%;  // Đặt mỗi phần tử chiếm 22% chiều rộng để có thể hiển thị 4 phần tử trên một hàng
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        overflow: hidden;
+        transition: box-shadow 0.3s ease;
+        margin-bottom: 30px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+        &:hover {
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+        }
+    }
+
+    &__image {
+        width: 100%;
+        height: auto;
+        aspect-ratio: 4/3;
+        object-fit: cover;
+        border-bottom: 1px solid #ddd;
+    }
+
+    &__title {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+        padding: 10px;
+        text-align: center;
+    }
+
+    &__description {
+        padding: 0 10px 10px;
+        color: #666;
+        font-size: 13px;
+    }
+
+    &__price {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 10px 10px;
+        font-size: 16px;
+        
+        &-new {
+            font-size: 18px;
+            font-weight: 700;
+            color: #e60023;
+            margin-right: 10px;
+        }
+
+        &-old {
+            font-size: 14px;
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 10px;
+        }
+
+        &-percent {
+            font-size: 13px;
+            font-weight: 700;
+            color: #ff9800;
+            background-color: rgba(255, 152, 0, 0.1);
+            padding: 2px 5px;
+            border-radius: 4px;
+        }
+    }
+    &__buttons {
+        display: flex;
+        justify-content: space-between;
+        padding: 10px;
+        gap: 10px;
+    
+        button {
+            flex: 1;
+            padding: 10px;
+            font-size: 14px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+    
+            &:hover {
+                background-color: #f5f5f5;
+            }
+    
+            &:first-child {
+                margin-right: auto; // Nút đầu tiên nằm bên trái
+            }
+    
+            &:last-child {
+                margin-left: auto; // Nút cuối nằm bên phải
+            }
+        }
+    }
+    
+    
+    
+
+    // Responsive để điều chỉnh số sản phẩm trên mỗi hàng theo kích thước màn hình
+    @media (max-width: 1024px) {
+        &__item {
+            width: 30%; // Hiển thị 3 phần tử trên một hàng cho màn hình vừa
+        }
+    }
+
+    @media (max-width: 768px) {
+        &__item {
+            width: 45%; // Hiển thị 2 phần tử trên một hàng cho màn hình nhỏ
+        }
+    }
+
+    @media (max-width: 576px) {
+        &__item {
+            width: 100%; // Hiển thị 1 phần tử trên một hàng cho màn hình rất nhỏ
+        }
+    }
+}
+
+//loc
+//loc
+.filter-group {
+    display: flex;
+    gap: 10px; /* Khoảng cách giữa các nút */
+    align-items: center;
+    margin-bottom: 10px;
+    .searchPrice{
+       
+        display: flex;
+        gap: 8px; // Khoảng cách giữa hai input
+
+        input[type="number"] {
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            width: 150px; // Đặt chiều rộng cố định cho input
+            box-sizing: border-box; // Đảm bảo padding và border không ảnh hưởng đến chiều rộng
+
+            &:focus {
+                outline: none;
+                border-color: #007bff; // Màu viền khi input được focus
+                box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25); // Hiệu ứng shadow khi focus
+            }
+
+            &::placeholder {
+                color: #aaa; // Màu placeholder
+            }
+        }
+    }
+}
+
+.filter-button {
+    display: flex;
+    align-items: center;
+    gap: 5px; /* Khoảng cách giữa icon và chữ */
+    padding: 8px 12px;
+    border: 2px solid #007bff; /* Màu viền */
+    border-radius: 6px;
+    color: #007bff;
+    background-color: #fff;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.filter-option {
+    display: flex;
+    align-items: center;
+    gap: 8px; /* Khoảng cách giữa logo và chữ */
+    padding: 8px 12px;
+    border: none;
+    border-radius: 6px;
+    background-color: #f7f9fc; /* Màu nền */
+    font-size: 14px;
+    cursor: pointer;
+    color: #000;
+}
+
+.filter-option:hover {
+    background-color: #e1e6ef; /* Màu khi hover */
+}
+
+.option-icon {
+    width: 20px; /* Kích thước icon */
+    height: 20px;
+    object-fit: contain; /* Đảm bảo giữ tỉ lệ ảnh */
+}
+
+.icon-filter::before {
+    content: "\1F50D"; /* Mã Unicode icon filter (🔍 hoặc tùy chọn) */
+    font-size: 18px;
+}
+.icon-filter2::before {
+    content: "\1F570"; 
+    font-size: 18px;
+}
+.icon-filter3::before {
+    content: "\1F6A9"; 
+    font-size: 18px;
+}
+.icon-filter4::before {
+    content: "\1F697"; 
+    font-size: 18px;
+}
+.filter-option {
+    /* ... */
+    border: 2px solid transparent; /* Viền mặc định trong suốt */
+    transition: border-color 0.3s ease; /* Hiệu ứng chuyển đổi màu viền */
+}
+
+.filter-option.selected {
+    border-color: rgb(43, 43, 182); /* Màu viền khi được chọn */
+}

@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <style>
+    /* CSS tùy chỉnh cho icon chatbot */
+    .custom-chat-icon {
+      --df-messenger-bot-message: #e3f2fd;
+      --df-messenger-user-message: #bbdefb;
+      --df-messenger-button-titlebar-color: #1976d2;
+      --df-messenger-font-color: #000000;
+      --df-messenger-send-icon: #1976d2;
+      --df-messenger-chat-background-color: #ffffff;
+      --df-messenger-width: 400px;
+      --df-messenger-height: 50px;
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    /* Ẩn icon mặc định */
+    .custom-chat-icon div[aria-label="Open chat"] svg {
+      display: none !important;
+    }
+
+    /* Cấu hình lại biểu tượng chat */
+    .custom-chat-icon div[aria-label="Open chat"] {
+      background-image: url('http://localhost:3001/logo192.png') !important;
+      /* Đảm bảo đường dẫn đúng */
+      background-size: cover !important;
+      background-color: transparent !important;
+      border: none !important;
+      width: 56px !important;
+      height: 56px !important;
+      border-radius: 50% !important;
+      padding: 0 !important;
+      min-width: unset !important;
+    }
+
+    /* Thêm hiệu ứng hover cho nút mở chat */
+    .custom-chat-icon div[aria-label="Open chat"]:hover {
+      opacity: 0.8;
+    }
+
+    .custom-chat-icon .df-messenger-wrapper {
+      border-radius: 16px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
+
+<body>
+  <div id="root"></div>
+  <script src="https://www.gstatic.com/dialogflow-console/fast/messenger/bootstrap.js?v=1"></script>
+  <df-messenger intent="WELCOME" chat-title="Chatbot" agent-id="a839014e-a81d-4020-9d8c-93cdfee22954"
+    language-code="en"></df-messenger>
+</body>
+
+</html>

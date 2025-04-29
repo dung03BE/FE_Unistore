@@ -1,0 +1,15 @@
+.personal {
+    h2 {
+        font-size: 30px;
+    }
+}
+/* PersonalInfo.scss */
+.fixed-label {
+    width: 150px; /* Điều chỉnh độ rộng theo nhu cầu */
+    display: inline-block;
+    text-align: right; /* Căn phải nội dung label */
+    margin-right: 10px; /* Khoảng cách giữa label và input */
+}
+.editPersonal {
+    font-size: 25px;
+}

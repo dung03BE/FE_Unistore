@@ -1,0 +1,234 @@
+.cart {
+    width: 100%;
+    background-color: #f8f8f8;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  
+    &__container {
+      display: flex;
+      gap: 20px;
+      max-width: 1500px;
+      margin: 0 auto;
+    }
+  
+    &__header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid #eee;
+  
+      h2 {
+        margin: 0;
+        font-size: 24px;
+      }
+    }
+  
+    &__clear-btn {
+      color: #ff4d4d;
+      background: none;
+      border: none;
+      cursor: pointer;
+      font-size: 14px;
+      
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  
+    &__left {
+      flex: 7;
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+    }
+  
+    &__right {
+      flex: 3;
+      align-self: flex-start;
+      position: sticky;
+      top: 20px;
+    }
+  
+    &__item {
+      display: flex;
+      align-items: center;
+      padding: 15px;
+      border: 1px solid #eee;
+      border-radius: 4px;
+      gap: 15px;
+      margin-bottom: 15px;
+  
+      &-image {
+        width: 80px;
+        height: 80px;
+        
+        img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          border-radius: 4px;
+        }
+      }
+  
+      &-content {
+        flex: 2;
+      }
+  
+      &-title {
+        margin: 0 0 5px 0;
+        font-size: 16px;
+      }
+  
+      &-color {
+        color: #666;
+        font-size: 14px;
+      }
+  
+      &-price {
+        flex: 1;
+        text-align: right;
+  
+        &-new {
+          color: #2baa4c;
+          font-weight: bold;
+          font-size: 16px;
+        }
+  
+        &-old {
+          text-decoration: line-through;
+          color: #999;
+          font-size: 14px;
+        }
+      }
+  
+      &-quantity {
+        display: flex;
+        align-items: center;
+        margin: 0 15px;
+  
+        button {
+          width: 30px;
+          height: 30px;
+          background: #f0f0f0;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          cursor: pointer;
+          
+          &:hover {
+            background: #e0e0e0;
+          }
+        }
+  
+        input {
+          width: 40px;
+          height: 30px;
+          text-align: center;
+          margin: 0 5px;
+          border: 1px solid #ddd;
+          border-radius: 4px;
+        }
+      }
+  
+      &-delete {
+        color: #ff4d4d;
+        background: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+        
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  
+    &__summary {
+      background-color: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      padding: 20px;
+  
+      h3 {
+        margin-top: 0;
+        margin-bottom: 20px;
+        font-size: 18px;
+        color: #333;
+        border-bottom: 1px solid #eee;
+        padding-bottom: 10px;
+      }
+  
+      &-row {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #555;
+      }
+  
+      &-total {
+        border-top: 1px solid #eee;
+        padding-top: 15px;
+        margin-top: 15px;
+        font-weight: bold;
+        color: #333;
+        font-size: 16px;
+      }
+  
+      &-value {
+        font-weight: bold;
+        
+        .cart__summary-total & {
+          color: #e53935;
+          font-size: 18px;
+        }
+      }
+    }
+  
+    &__checkout-btn {
+      width: 100%;
+      padding: 12px;
+      background-color: #e53935;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 10px;
+      
+      &:hover {
+        background-color: #d32f2f;
+      }
+    }
+  }
+  
+  // Media queries for responsiveness
+  @media (max-width: 768px) {
+    .cart {
+      &__container {
+        flex-direction: column;
+      }
+      
+      &__right {
+        position: static;
+        width: 100%;
+        margin-top: 20px;
+      }
+      
+      &__item {
+        flex-wrap: wrap;
+        
+        &-content {
+          flex: 100%;
+          margin-bottom: 10px;
+        }
+        
+        &-price {
+          flex: 1;
+        }
+      }
+    }
+  }

@@ -1,0 +1,225 @@
+.payment-result-container {
+    max-width: 800px;
+    margin: 40px auto;
+    padding: 24px;
+    background-color: white;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+  }
+  
+  /* General styles */
+  h2 {
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 12px;
+  }
+  
+  h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #eee;
+    color: #333;
+  }
+  
+  h4 {
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 8px;
+    color: #444;
+  }
+  
+  p {
+    margin-bottom: 8px;
+  }
+  
+  /* Success state */
+  .success-header {
+    text-align: center;
+    margin-bottom: 32px;
+  }
+  
+  .success-icon {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: #e6f7ef;
+    color: #10b981;
+    border-radius: 50%;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .success-header h2 {
+    color: #10b981;
+  }
+  
+  /* Failed state */
+  .failed-payment {
+    text-align: center;
+    padding: 40px 0;
+  }
+  
+  .failed-icon {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: #fee2e2;
+    color: #ef4444;
+    border-radius: 50%;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .failed-payment h2 {
+    color: #ef4444;
+  }
+  
+  /* Unknown state */
+  .unknown-payment {
+    text-align: center;
+    padding: 40px 0;
+  }
+  
+  .unknown-icon {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    line-height: 50px;
+    text-align: center;
+    background-color: #f3f4f6;
+    color: #6b7280;
+    border-radius: 50%;
+    font-size: 24px;
+    margin-bottom: 16px;
+  }
+  
+  .unknown-payment h2 {
+    color: #6b7280;
+  }
+  
+  /* Order information */
+  .order-info {
+    background-color: #f9fafb;
+    padding: 16px;
+    border-radius: 8px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+  }
+  
+  .order-info-grid {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  
+  .order-info-column {
+    flex: 1;
+    min-width: 250px;
+    padding-right: 16px;
+  }
+  
+  .order-total {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .total-amount {
+    color: #10b981;
+    font-size: 18px;
+  }
+  
+  /* Order details */
+  .order-details-section {
+    margin-top: 24px;
+  }
+  
+  .order-item {
+    background-color: #f9fafb;
+    padding: 16px;
+    border-radius: 6px;
+    margin-bottom: 12px;
+    transition: background-color 0.2s;
+  }
+  
+  .order-item:hover {
+    background-color: #f3f4f6;
+  }
+  
+  .order-item-details {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 8px;
+    margin-top: 8px;
+    font-size: 14px;
+  }
+  
+  /* Loading state */
+  .loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 0;
+  }
+  
+  .loading-spinner {
+    width: 30px;
+    height: 30px;
+    border: 3px solid #e5e7eb;
+    border-top-color: #3b82f6;
+    border-radius: 50%;
+    animation: spinner 1s linear infinite;
+    margin-right: 12px;
+  }
+  
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+  
+  /* Error message */
+  .error-message {
+    text-align: center;
+    padding: 24px;
+  }
+  
+  .error-message h2 {
+    color: #ef4444;
+  }
+  
+  /* Home link */
+  .home-link {
+    text-align: center;
+    margin-top: 32px;
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+  }
+  
+  .home-link a {
+    display: inline-block;
+    padding: 8px 16px;
+    background-color: #3b82f6;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    transition: background-color 0.2s;
+  }
+  
+  .home-link a:hover {
+    background-color: #2563eb;
+  }
+  
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .order-info-column {
+      flex: 100%;
+      padding-right: 0;
+      margin-bottom: 16px;
+    }
+  }

@@ -1,0 +1,235 @@
+* {
+  font-family: 'Times New Roman', Times, serif;
+  
+}
+.product-name{
+  background-color: #fdfdfd;
+  font-size: 20px;
+  display: flex;
+  align-items: center; // Căn chỉnh các phần tử theo chiều dọc
+  flex-wrap: nowrap; // Ngăn các phần tử xuống dòng nếu không đủ chỗ
+  .product__title {
+    margin-right: 10px; // Thêm khoảng cách giữa tiêu đề và các phần tử khác
+    font-size: 30px;
+  }
+  
+  .box02 {
+    display: flex;
+    align-items: center;
+    
+    .quantity-sale {
+      margin-right: 10px;
+      opacity: 0.7  ;
+    }
+    
+    .box02__left {
+      margin-right: 20px;
+      opacity: 0.7;
+    }
+    
+    .box02__right {
+      margin-right: 20px;
+      color: #6484e6;
+    }
+    
+    .tab-spec {
+      margin-right: 20px;
+      text-decoration: none;
+      color: #6484e6;;
+    }
+  }
+}
+.box_main {
+  display: flex;
+  width: 100%;
+  gap: 20px; /* Tạo khoảng cách 20px giữa các phần tử */
+  background-color: #fdfdfd;
+  font-size: 20px;
+}
+
+.box_left {
+  flex: 2; /* Chiếm 2 phần */
+  background-color:  #f2f4f7;
+  padding: 20px;
+  display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+  border-radius: 25px;
+  .product__description {
+    width: 100%; // Đảm bảo chiếm toàn bộ chiều rộng của box_left
+    text-align: left; // Căn trái nội dung
+    margin-top: 20px; // Thêm khoảng cách với các phần tử khác
+    background-color: white; // Thêm background để dễ nhìn
+    padding: 10px; // Thêm padding
+    border-radius: 8px; // Thêm border radius
+    font-size: 27px;
+    
+    color: black;
+}
+}
+.main-image {
+  width: 100%;
+  height: 100%;
+  border: 1px solid #ddd;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #f9f9f9;
+}
+
+.main-product-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
+}
+
+.thumbnail-list {
+  display: flex;
+  gap: 8px;
+}
+
+.thumbnail-image {
+  width: 100%;
+  height: 80px;
+  object-fit: cover;
+  border: 1px solid #ddd;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.thumbnail-image:hover {
+  transform: scale(1.1);
+  border: 2px solid #ff6600;
+}
+
+
+.box_right {
+  flex: 1; /* Chiếm 1 phần */
+  background-color: #f2f4f7;
+  
+  padding: 20px;
+  border-radius: 25px;
+  
+  .product__price {
+    font-size: 27px;
+    color: #d92d20;;
+    float: left;
+    
+  }
+}
+.inner-box {
+  margin-top: 40px;
+  padding: 15px;
+  border: 1px solid black;
+  background-color: white;
+  border-radius: 8px
+}
+.inner-box .offer-item 
+{
+  font-size: 20px;
+}
+.product-name {
+  display: block;
+  position: relative;
+  padding-right: 155px;
+}
+
+.productItem {
+    display: flex;
+    flex-direction: column;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    background-color: #fff;
+  
+    .productImage {
+      width: 100%;
+      max-height: 500px;
+      object-fit: cover;
+      border-radius: 8px;
+    }
+  
+    .productTitle {
+      font-size: 2rem;
+      font-weight: 600;
+      margin: 20px 0;
+      color: #333;
+    }
+  
+    .productPrice {
+      font-size: 1.5rem;
+      color: #e74c3c;
+      font-weight: 700;
+      margin-bottom: 20px;
+    }
+  
+    .productDescription {
+      font-size: 1.1rem;
+      color: #555;
+      margin-bottom: 20px;
+      line-height: 1.6;
+    }
+  
+    button {
+      padding: 10px 20px;
+      font-size: 1.2rem;
+      background-color: #3498db;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+  
+      &:hover {
+        background-color: #2980b9;
+      }
+    }
+  
+    @media screen and (min-width: 768px) {
+      flex-direction: row;
+      .productItem {
+        flex-direction: column;
+      }
+      .productImage {
+        width: 50%;
+        max-height: 100%;
+      }
+    }
+  }
+  
+  .color-picker {
+    display: flex;
+    flex-wrap: wrap;
+    button {
+      margin: 5px;
+      padding: 8px 12px;
+      border: 1px solid #ccc;
+      border-radius: 40px;
+      cursor: pointer;
+      background-color: white;
+      &.selected {
+        border: 2px solid blue;
+      }
+    }
+  }
+  /* ProductDetails.scss */
+.comment {
+  margin-top: 20px;
+  button {
+      padding: 10px 20px;
+      background-color: #007bff;
+      color: white;
+      border: none;
+      cursor: pointer;
+      border-radius: 5px;
+      margin-bottom: 10px;
+  }
+  .chat-room { // Thêm class chat-room để style chat room
+      border: 1px solid #ddd;
+      padding: 10px;
+      border-radius: 5px;
+  }
+}

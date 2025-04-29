@@ -1,0 +1,28 @@
+.promotion-list-container {
+    width     : 100%;
+    overflow-x: auto;
+    /* Thêm scroll ngang cho container nếu cần */
+}
+
+.ant-table {
+    width: 100%;
+}
+
+/* Ẩn các cột trên các kích thước màn hình khác nhau */
+@media (max-width: 768px) {
+    .promotion-list-container .hide-on-small {
+        display: none !important;
+    }
+}
+
+@media (max-width: 992px) {
+    .promotion-list-container .hide-on-medium {
+        display: none !important;
+    }
+}
+
+@media (max-width: 1200px) {
+    .promotion-list-container .hide-on-large {
+        display: none !important;
+    }
+}

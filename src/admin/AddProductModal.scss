@@ -1,0 +1,52 @@
+/* Định dạng font và padding cho toàn bộ Modal */
+.add-product-modal .ant-modal-content {
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 16px;
+    padding: 24px;
+  }
+  
+  /* Bọc nội dung form có padding bên trong */
+  .modal-content {
+    background-color: #fff;
+    padding: 20px;
+  }
+  
+  /* Cải tiến kiểu của nút ở footer */
+  .modal-btn {
+    min-width: 120px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+  
+  /* Nút Hủy: màu nền nhẹ, viền và chữ trung tính */
+  .cancel-btn {
+    border-color: #d9d9d9;
+    color: #555;
+  }
+  
+  /* Nút Tạo sản phẩm: nền xanh và chữ trắng */
+  .submit-btn {
+    background-color: #1890ff;
+    border-color: #1890ff;
+    color: #fff;
+  }
+  
+  /* Cải tiến cho Label của Form Item */
+  .ant-form-item-label > label {
+    font-weight: 600;
+    color: #333;
+  }
+  
+  /* Cải tiến cho Divider */
+  .ant-divider-horizontal {
+    border-top: 2px solid #f0f0f0;
+    font-size: 18px;
+    font-weight: 600;
+  }
+  
+  /* Tăng kích thước các Input nếu cần */
+  .ant-input, .ant-input-number, .ant-select-selector {
+    height: 40px;
+    font-size: 16px;
+  }
+  

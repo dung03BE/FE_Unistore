@@ -1,0 +1,169 @@
+
+.green-phone {
+    padding: 20px;
+  
+    h2 {
+      color: #28a745; // Màu xanh lá cây chủ đạo
+      margin-bottom: 20px;
+    }
+  
+    h3 {
+      margin-top: 30px;
+      margin-bottom: 15px;
+      color: #007bff; // Màu xanh dương cho tiêu đề phụ
+    }
+    
+    p {
+      line-height: 1.6;
+      color: #333;
+    }
+  
+    .ant-list-item {
+      padding: 8px 16px;
+    }
+  
+    .ant-divider {
+      margin: 30px 0;
+    }
+  
+    .step-content {
+        display: flex;
+        align-items: stretch; // Sử dụng stretch để các phần tử có cùng chiều cao
+        margin-top: 20px;
+      }
+    
+      .ant-card {
+        margin-bottom: 20px;
+        padding: 20px;
+        margin-right: 20px;
+        flex: 1; // Cho phép Card mở rộng để lấp đầy không gian
+      }
+    
+      .ant-steps {
+        display: flex;
+        align-items: center;
+        width: 60%;
+      }
+    
+      .recycle-image {
+        width: 200px;
+        height: auto;
+        margin-left: 20px;
+      }
+  
+    .ant-collapse {
+      margin-top: 15px;
+      margin-bottom: 20px;
+  
+      .ant-collapse-header {
+        font-weight: 600;
+      }
+  
+      .ant-collapse-content-box {
+        padding: 15px;
+      }
+    }
+  
+    .ant-form {
+      margin-top: 20px;
+  
+      .ant-form-item {
+        margin-bottom: 15px;
+      }
+    }
+  
+    .ant-btn-primary {
+      background-color: #28a745;
+      border-color: #28a745;
+  
+      &:hover,
+      &:focus {
+        background-color: #218838;
+        border-color: #1e7e34;
+      }
+    }
+  
+    .step-buttons {
+      margin-top: 20px;
+      text-align: center;
+  
+      .ant-btn {
+        margin: 0 10px;
+      }
+    }
+  }
+  .thugom {
+    display: flex;
+    align-items: center;
+    gap: 2rem;
+    padding: 2rem;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+  }
+  
+  .thugomLeft {
+    flex: 2;
+  }
+  
+  .thugomLeft p {
+    margin-bottom: 1rem;
+    line-height: 1.6;
+    font-size: 1rem;
+    position: relative;
+    padding-left: 1.5rem;
+  }
+  
+  .thugomLeft p:before {
+    content: "•";
+    color: #4a8cca;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+  }
+  
+  .thugomRight {
+    flex: 1.2;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .thugomRight img {
+    width: 100%;
+    max-width: 600px;
+    height: auto;
+    object-fit: cover;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .thugom {
+      flex-direction: column;
+    }
+    
+    .thugomLeft, .thugomRight {
+      flex: 1;
+      width: 100%;
+    }
+  }
+  .dashed-border-box {
+    border: 5px dashed #4cd411; // Tạo viền đường đứt nét
+    padding: 20px; // Thêm khoảng cách bên trong viền
+    border-radius: 20px; // Bo tròn góc viền (tùy chọn)
+}
+.recycle-image2 {
+  display: flex;
+}
+.recycle-image2_1 {
+ flex:2;
+}
+.recycle-image2_2
+{
+  width: 200px;
+  height: auto;
+  flex: 1;
+}
+

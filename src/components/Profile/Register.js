@@ -192,7 +192,7 @@ function Register() {
                         </Row>
                         <Form.Item>
                             <ReCAPTCHA
-                                sitekey="6LfsghIrAAAAAJYV-bXQP5O5pJ_0kFo338qY-g3L" // ← thay bằng site key từ Google
+                                sitekey="6LeHoyorAAAAAF-kXhmsw3hSBwjOQ3B1PLoipcsu" // ← thay bằng site key từ Google
                                 onChange={(value) => setCaptchaValue(value)}
                                 ref={recaptchaRef}
                             />

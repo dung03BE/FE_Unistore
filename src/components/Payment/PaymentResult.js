@@ -63,7 +63,7 @@ function PaymentResult() {
                     <div className="order-info-column">
                         <p>Mã đơn hàng: <strong>{order.id}</strong></p>
                         <p>Tên người nhận: <strong>{order.fullname}</strong></p>
-                        <p>Số điện thoại: <strong>{order.phoneNumber}</strong></p>
+                        <p>Số điện thoại: <strong>{order.phone_number}</strong></p>
                         <p>Địa chỉ: <strong>{order.address}</strong></p>
                     </div>
                     <div className="order-info-column">

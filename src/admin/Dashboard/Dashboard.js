@@ -4,7 +4,7 @@ import { ArrowUpOutlined, ShoppingCartOutlined, UserOutlined, DollarOutlined, Te
 import { Line, Pie } from '@ant-design/plots';
 import { getMonthlyRevenue, getOverview, getTopProductType, getTopSellingProducts } from '../../services/dashboardService';
 import { useNavigate } from 'react-router-dom';
-
+import { getMyInfor } from '../../services/userService';
 const { Title } = Typography;
 
 const Dashboard = () => {
@@ -12,7 +12,30 @@ const Dashboard = () => {
     const [revenueData, setRevenueData] = useState([]);
     const [topProductTypes, setTopProductTypes] = useState([]);
     const [topSellingProducts, setTopSellingProducts] = useState([]);
+    const [isAdmin, setIsAdmin] = useState(false); // State to track admin role
+    const [loading, setLoading] = useState(true); // State to handle initial loading
     const navigate = useNavigate();
+    useEffect(() => {
+        const checkUserRole = async () => {
+            try {
+                const userInfo = await getMyInfor();
+                console.log("userInfo", userInfo);
+                if (userInfo?.roleId === 1) { // Assuming roleId 1 represents admin
+                    setIsAdmin(true);
+                } else {
+                    message.error("Bạn không có quyền truy cập Dashboard!");
+                }
+            } catch (error) {
+                console.error("Lỗi khi kiểm tra quyền:", error);
+                message.error("Có lỗi xảy ra khi kiểm tra quyền truy cập.");
+                navigate("/login"); // Or some other appropriate route
+            } finally {
+                setLoading(false);
+            }
+        };
+
+        checkUserRole();
+    }, [navigate]);
     useEffect(() => {
         const fetchData = async () => {
             try {
@@ -20,9 +43,16 @@ const Dashboard = () => {
                 const revenueData = await getMonthlyRevenue();
                 const productTypeData = await getTopProductType();
                 const sellingProductsData = await getTopSellingProducts();
-                console.log("sellingProductsData", sellingProductsData);
+
+                console.log("revenueData", revenueData);
                 setOverview(overviewData);
-                setRevenueData(revenueData);
+
+
+                const transformedRevenueData = revenueData.map(item => ({
+                    ...item,
+                    month: `Tháng ${item.month}`
+                }));
+                setRevenueData(transformedRevenueData);
                 setTopProductTypes(productTypeData);
                 setTopSellingProducts(sellingProductsData);
             } catch (error) {
@@ -35,8 +65,10 @@ const Dashboard = () => {
                 }
             }
         };
-        fetchData();
-    }, []);
+        if (isAdmin) {
+            fetchData();
+        }
+    }, [isAdmin, navigate]);
 
     const revenueChartConfig = {
         data: revenueData,

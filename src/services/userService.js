@@ -1,4 +1,4 @@
-import { post, putAuth } from "../utils/request";
+import { getAuth, post, putAuth } from "../utils/request";
 
 export const putUserApi = async (userData) => {
     const path = `users`;
@@ -56,5 +56,16 @@ export const resetPasswordApi = async (token, newPassword) => {
     } catch (error) {
         console.error("Lỗi khi đặt lại mật khẩu", error);
         throw error; // Re-throw lỗi để component có thể xử lý
+    }
+};
+
+
+export const getMyInfor = async () => {
+    try {
+        const result = await getAuth(`users/myInfo`);
+        return result;
+    } catch (error) {
+        console.error(`Lỗi khi gọi API myfo`, error);
+        throw error; // Re-throw lỗi để component xử lý nếu cần
     }
 };

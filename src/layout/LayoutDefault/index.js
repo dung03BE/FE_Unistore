@@ -66,12 +66,12 @@ function LayoutDefault() {
         const fetchAnnouncements = async () => {
             try {
                 const data = await getAnnounceByUserId();
-                // if (Array.isArray(response)) {
-                //     setAnnouncements(response);
-                // } else {
-                //     setAnnouncements([]);
-                // }
-                setAnnouncements(data);
+                if (Array.isArray(response)) {
+                    setAnnouncements(response);
+                } else {
+                    setAnnouncements([]);
+                }
+                // setAnnouncements(data);
                 console.log("Thông báo:", data);
             } catch (error) {
                 console.error("Lỗi khi lấy thông báo:", error);

@@ -94,7 +94,12 @@ function Login() {
 
         // Thông báo đăng nhập thành công và điều hướng
         message.success("Đăng nhập thành công");
-        navigate("/");
+        if (data.roleId === 1 || data.roleId === 3) {
+          navigate("/admin");
+        }
+        else {
+          navigate("/");
+        }
       } catch (userInfoError) {
         console.error("Lỗi khi lấy thông tin người dùng:", userInfoError);
         // Vẫn điều hướng người dùng vì đã đăng nhập thành công

@@ -66,8 +66,8 @@ function LayoutDefault() {
         const fetchAnnouncements = async () => {
             try {
                 const data = await getAnnounceByUserId();
-                if (Array.isArray(response)) {
-                    setAnnouncements(response);
+                if (Array.isArray(data)) {
+                    setAnnouncements(data);
                 } else {
                     setAnnouncements([]);
                 }

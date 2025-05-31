@@ -12,6 +12,12 @@ function Register() {
     const navigate = useNavigate();
     const recaptchaRef = useRef(null);
     const [captchaValue, setCaptchaValue] = useState(null);
+    const resetRecaptcha = () => {
+        if (recaptchaRef.current) {
+            recaptchaRef.current.reset(); // Gọi phương thức reset của ReCAPTCHA
+            setCaptchaValue(null); // Đặt lại giá trị captcha trong state
+        }
+    };
     const onFinish = async (values) => {
         try {
             const formattedValues = {
@@ -27,20 +33,25 @@ function Register() {
                 navigate('/login');
             } else if (response.code === 1002) {
                 message.error('Số điện thoại đã tồn tại!');
+                resetRecaptcha(); // Reset ReCAPTCHA nếu có lỗi
             }
             else if (response.code === 1008) {
                 message.error(response.message);
+                resetRecaptcha(); // Reset ReCAPTCHA nếu có lỗi
             }
             else if (response.code === 1008) {
                 message.error(response.message);
             } else if (response.code === 1015) {
                 message.error('Email đã tồn tại!');
+                resetRecaptcha(); // Reset ReCAPTCHA nếu có lỗi
             } else {
                 message.error('Đăng ký thất bại. Vui lòng thử lại.');
+                resetRecaptcha(); // Reset ReCAPTCHA nếu có lỗi
             }
         } catch (error) {
             console.error('Lỗi đăng ký:', error);
             message.error('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            resetRecaptcha(); // Reset ReCAPTCHA nếu có lỗi
         }
     };
 

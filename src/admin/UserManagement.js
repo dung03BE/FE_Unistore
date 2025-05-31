@@ -4,8 +4,8 @@ import { getToken } from '../services/localStorageService';
 import moment from 'moment';
 import { postUserApi } from '../services/userService';
 import ReCAPTCHA from 'react-google-recaptcha';
-const { Option } = Select;
 import { BASE_URL } from "../config";
+const { Option } = Select;
 const roleNames = {
     1: 'Admin',
     2: 'User',

@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Table, Input, Button, Modal, Form, Select, message, Space, Spin, DatePicker, Tooltip } from 'antd';
 import { getToken } from '../services/localStorageService';
 import moment from 'moment';
+import { postUserApi } from '../services/userService';
+import ReCAPTCHA from 'react-google-recaptcha';
+const { Option } = Select;
 import { BASE_URL } from "../config";
 import { width } from '@fortawesome/free-brands-svg-icons/fa42Group';
-const { Option } = Select;
-
 const roleNames = {
     1: 'Admin',
     2: 'User',
@@ -23,7 +24,14 @@ function UserManagement() {
     const [roleForm] = Form.useForm();
     const [selectedRole, setSelectedRole] = useState(null);
     const [filteredUsers, setFilteredUsers] = useState([]);
-
+    const recaptchaRef = useRef(null);
+    const [captchaValue, setCaptchaValue] = useState(null);
+    const resetRecaptcha = () => {
+        if (recaptchaRef.current) {
+            recaptchaRef.current.reset(); // Gọi phương thức reset của ReCAPTCHA
+            setCaptchaValue(null); // Đặt lại giá trị captcha trong state
+        }
+    };
     useEffect(() => {
         fetchUsers();
     }, []);
@@ -72,6 +80,7 @@ function UserManagement() {
         setIsModalOpen(false);
         setEditingUser(null);
         form.resetFields();
+        resetRecaptcha();
     };
 
     const handleCreateUser = async (values) => {
@@ -83,45 +92,56 @@ function UserManagement() {
             return;
         }
         try {
-            const payload = {
+
+            const formattedValues = {
                 fullName: values.fullName,
                 phoneNumber: values.phoneNumber,
                 address: values.address,
                 password: values.password,
-                retype_password: values.retypePassword, // Assuming your backend requires this for registration
-                dateOfBirth: values.dateOfBirth,
+                retype_password: values.retypePassword,
+                // Đảm bảo values.dateOfBirth là đối tượng moment hoặc Date để format
+                dateOfBirth: values.dateOfBirth ? values.dateOfBirth.format('YYYY-MM-DD') : null,
                 roleId: values.roleId,
                 email: values.email,
+                recaptcha: captchaValue, // Thêm giá trị captcha vào đây
             };
-            console.log("Payload:", payload);
-            const response = await fetch(`${BASE_URL}/api/v1/users/register`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(payload),
-            });
-            const responseData = await response.json(); // Lấy dữ liệu response
-            if (!response.ok) {
-                if (responseData && responseData.code === 1008) {
-                    form.setFields([{
-                        name: 'dateOfBirth',
-                        errors: [responseData.message],
-                    }]);
-                } else {
-                    console.error("Lỗi khi tạo người dùng:", responseData);
-                    message.error("Không thể tạo người dùng.");
-                }
-                return;
+
+            console.log("Payload:", formattedValues);
+
+            const response = await postUserApi(formattedValues); // Sử dụng hàm postUserApi
+
+            console.log("Response Data:", response); // Log the response data
+
+            if (response.code === 1000) { // Kiểm tra code thành công
+                message.success('Tạo người dùng thành công!');
+                // navigate('/login'); // Bỏ comment nếu bạn muốn chuyển hướng sau khi đăng ký thành công
+                await fetchUsers(); // Giữ lại logic fetchUsers nếu cần cập nhật danh sách
+                setIsModalOpen(false); // Đóng modal nếu cần
+                form.resetFields(); // Reset form
+                resetRecaptcha();
+            } else if (response.code === 1002) {
+                message.error('Số điện thoại đã tồn tại!');
+                resetRecaptcha();
+            } else if (response.code === 1008) {
+                // Cập nhật trường lỗi cụ thể nếu message trả về từ backend liên quan đến dateOfBirth
+                // hoặc một trường nào đó
+                form.setFields([{
+                    name: 'dateOfBirth', // Hoặc trường nào khác mà lỗi 1008 đề cập
+                    errors: [response.message],
+                }]);
+                message.error(response.message); // Hiển thị thông báo lỗi chung
+                resetRecaptcha();
+            } else if (response.code === 1015) {
+                message.error('Email đã tồn tại!');
+                resetRecaptcha();
+            } else {
+                message.error('Đăng ký thất bại. Vui lòng thử lại.');
+                resetRecaptcha();
             }
-            message.success('Tạo người dùng thành công.');
-            await fetchUsers();
-            setIsModalOpen(false);
-            form.resetFields();
         } catch (error) {
-            console.error("Lỗi mạng khi tạo người dùng:", error);
-            message.error("Lỗi mạng, không thể tạo người dùng.");
+            console.error('Lỗi khi tạo người dùng:', error);
+            message.error('Đã xảy ra lỗi. Vui lòng thử lại sau.');
+            resetRecaptcha();
         } finally {
             setLoading(false);
         }
@@ -135,6 +155,7 @@ function UserManagement() {
             setLoading(false);
             return;
         }
+        console.log("Update User Payload:", values);
         try {
             const response = await fetch(`${BASE_URL}/api/v1/users/updateByAdmin/${editingUser.id}`, {
                 method: 'PUT',
@@ -154,7 +175,8 @@ function UserManagement() {
                     }]);
                 } else {
                     console.error("Lỗi khi cập nhật người dùng:", responseData);
-                    message.error("Không thể cập nhật người dùng.");
+                    message.error(responseData.Message || "Không thể cập nhật người dùng.");
+                    resetRecaptcha();
                 }
                 return;
             }
@@ -280,7 +302,6 @@ function UserManagement() {
             title: 'ID',
             dataIndex: 'id',
             key: 'id',
-            width: 70
         },
         {
             title: 'Số điện thoại',
@@ -296,7 +317,6 @@ function UserManagement() {
             title: 'Địa chỉ',
             dataIndex: 'address',
             key: 'address',
-
             ellipsis: {
                 showTitle: false, // Không hiển thị tooltip mặc định
             },
@@ -341,6 +361,7 @@ function UserManagement() {
                 </Space>
             ),
         },
+
     ];
 
     return (
@@ -422,7 +443,10 @@ function UserManagement() {
                     <Form.Item
                         name="phoneNumber"
                         label="Số điện thoại"
-                        rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
+                        rules={[
+                            { required: true, message: 'Vui lòng nhập số điện thoại!' },
+                            { pattern: /^\d{10}$/, message: 'Số điện thoại phải có đúng 10 số!' }
+                        ]}
                     >
                         <Input />
                     </Form.Item>
@@ -431,7 +455,13 @@ function UserManagement() {
                             <Form.Item
                                 name="password"
                                 label="Mật khẩu"
-                                rules={[{ required: true, message: 'Vui lòng nhập mật khẩu!' }]}
+                                rules={[
+                                    { required: true, message: 'Vui lòng nhập mật khẩu!' },
+                                    {
+                                        pattern: /^(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+])[A-Za-z\d!@#$%^&*()_+]{8,}$/,
+                                        message: 'Mật khẩu phải có ít nhất 8 ký tự, bao gồm chữ hoa, số và ký tự đặc biệt!',
+                                    },
+                                ]}
                             >
                                 <Input.Password />
                             </Form.Item>
@@ -475,12 +505,20 @@ function UserManagement() {
                         name="roleId"
                         label="Role"
                         rules={[{ required: true, message: 'Vui lòng chọn Role!' }]}
+                        initialValue={!editingUser ? 2 : undefined} // Mặc định là User (2) khi thêm mới
                     >
                         <Select>
-                            <Option value={1}>{roleNames[1]}</Option>
-                            <Option value={2}>{roleNames[2]}</Option>
-                            <Option value={3}>{roleNames[3]}</Option>
-                            {/* Add more roles if needed */}
+                            {!editingUser ? (
+                                // Chỉ hiển thị role User khi thêm người dùng mới
+                                <Option value={2}>{roleNames[2]}</Option>
+                            ) : (
+                                // Hiển thị tất cả roles khi sửa người dùng
+                                <>
+                                    <Option value={1}>{roleNames[1]}</Option>
+                                    <Option value={2}>{roleNames[2]}</Option>
+                                    <Option value={3}>{roleNames[3]}</Option>
+                                </>
+                            )}
                         </Select>
                     </Form.Item>
                     <Form.Item
@@ -494,6 +532,13 @@ function UserManagement() {
                         ]}
                     >
                         <Input />
+                    </Form.Item>
+                    <Form.Item>
+                        <ReCAPTCHA
+                            sitekey="6LeNoEErAAAAALvbfhqpIPXRN4fN5if_s-R4kQ0d" // ← thay bằng site key từ Google
+                            onChange={(value) => setCaptchaValue(value)}
+                            ref={recaptchaRef}
+                        />
                     </Form.Item>
                 </Form>
             </Modal>

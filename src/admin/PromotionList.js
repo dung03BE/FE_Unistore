@@ -282,13 +282,13 @@ function PromotionList() {
         } catch (error) {
             console.error("Lỗi khi tạo coupon:", error);
             message.error("Lỗi khi tạo coupon!");
-            // Hiển thị thông báo lỗi cho người dùng nếu cần
+
         }
     };
 
     return (
         <div className="promotion-list-container">
-            <h1>Quản lý Coupon</h1>
+            <h1>Quản lý khuyến mãi</h1>
             <Button type="primary" icon={<PlusOutlined />} onClick={showCreateModal} style={{ marginBottom: 16 }}>
                 Thêm Coupon
             </Button>

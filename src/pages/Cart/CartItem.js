@@ -1,6 +1,6 @@
 import { useDispatch } from "react-redux";
 import { deleteItem, updateQuantity } from "../../actions/cart";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { deleteCartItem, putCartApi } from "../../services/cartService";
 import { BASE_URL } from "../../config";
 function CartItem({ item }) {
@@ -21,16 +21,23 @@ function CartItem({ item }) {
         }
     };
 
-    // useEffect(() => {
-    //     if (quantity !== item.quantity) {
-    //         clearTimeout(debounceRef.current);
-    //         debounceRef.current = setTimeout(() => {
-    //             putCartApi(item.info.id, quantity, item.info.color) // Vẫn gọi API để đồng bộ
-    //                 .then(() => console.log("Đã cập nhật giỏ hàng (API)"))
-    //                 .catch((error) => console.error("Lỗi khi cập nhật giỏ hàng (API):", error));
-    //         }, 500);
-    //     }
-    // }, [quantity, item.id, item.info.color]);
+    const handleInputChange = (e) => {
+        const value = parseInt(e.target.value); // Lấy giá trị nhập vào và chuyển đổi sang số nguyên
+        if (!isNaN(value) && value >= 1) { // Đảm bảo là số hợp lệ và lớn hơn hoặc bằng 1
+            updateQuantityAndApi(value);
+        } else if (e.target.value === "") {
+            // Cho phép xóa trống để người dùng nhập số mới
+            setQuantity("");
+            clearTimeout(debounceRef.current); // Xóa debounce nếu đang gõ
+        }
+    };
+
+    const handleInputBlur = () => {
+        // Khi người dùng rời khỏi input, nếu giá trị rỗng hoặc không hợp lệ, đặt lại về 1
+        if (quantity === "" || isNaN(quantity) || quantity < 1) {
+            updateQuantityAndApi(1);
+        }
+    };
     const updateQuantityAndApi = (newQuantity) => {
         setQuantity(newQuantity);
         clearTimeout(debounceRef.current);
@@ -54,44 +61,6 @@ function CartItem({ item }) {
     };
 
 
-    // const handleUp = () => {
-    //     const newQuantity = quantity + 1;
-    //     setQuantity(newQuantity);
-    //     putCartApi(item.info.id, newQuantity, item.info.color)
-    //         .then(() => {
-    //             console.log("Đã cập nhật giỏ hàng (tăng)");
-    //             dispatch(updateQuantity(item.id, newQuantity));
-    //             window.location.reload(); // Reload sau khi cập nhật thành công
-    //         })
-    //         .catch((error) => console.error("Lỗi khi cập nhật giỏ hàng:", error));
-    // };
-
-    // const handleDown = () => {
-    //     if (quantity > 1) {
-    //         const newQuantity = quantity - 1;
-    //         setQuantity(newQuantity);
-    //         putCartApi(item.info.id, newQuantity, item.info.color)
-    //             .then(() => {
-    //                 console.log("Đã cập nhật giỏ hàng (giảm)");
-    //                 dispatch(updateQuantity(item.id, newQuantity));
-    //                 window.location.reload(); // Reload sau khi cập nhật thành công
-    //             })
-    //             .catch((error) => console.error("Lỗi khi cập nhật giỏ hàng:", error));
-    //     }
-    // };
-
-    // const handleDelete = async () => {
-    //     console.log("Xóa sản phẩm có id:", item);
-    //     try {
-    //         const result = await deleteCartItem(item.id); // Gọi API xóa với cartItemId
-    //         console.log("Kết quả xóa cart item:", result);
-    //         dispatch(deleteItem(item.id)); // Cập nhật Redux store sau khi xóa thành công
-    //     } catch (error) {
-    //         console.error("Lỗi khi xóa cart item:", error);
-    //         // Xử lý lỗi nếu cần, ví dụ hiển thị thông báo cho người dùng
-    //     }
-    // };
-
     const imageUrl = `${item.info.image}`; // Xây dựng URL đầy đủ
 
     return (
@@ -111,9 +80,14 @@ function CartItem({ item }) {
             </div>
             <div className="cart__item-quantity">
                 <button onClick={handleDown}>-</button>
-                <input ref={inputRef}
+                <input
+                    ref={inputRef}
                     value={quantity}
-                    readOnly />
+                    onChange={handleInputChange} // Xử lý sự kiện khi nhập liệu
+                    onBlur={handleInputBlur} // Xử lý khi rời khỏi input
+                    type="number" // Đặt type là number để có các nút tăng giảm mặc định trên trình duyệt (tùy chọn)
+                    min="1" // Đảm bảo số lượng tối thiểu là 1
+                />
                 <button onClick={handleUp}>+</button>
             </div>
             <button className="cart__item-delete" onClick={handleDelete}>Xóa</button>

@@ -86,6 +86,13 @@ const AddProductModal = ({ visible, onCancel, onSuccess, categories }) => {
 
             // Create the product
             const result = await createProduct(productData);
+            if (result.code === 1001) {
+                notification.error({
+                    message: "Lỗi",
+                    description: result.message,
+                });
+                return;
+            }
             console.log("result createProduct: ", result); // Kiểm tra xem có result.id không
             // If there are images to upload
             console.log("productId:", result.result.id, "files:", fileList);

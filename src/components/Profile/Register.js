@@ -85,11 +85,16 @@ function Register() {
                                 <Form.Item
                                     label="Số điện thoại"
                                     name="phoneNumber"
-                                    rules={[{ required: true, message: 'Vui lòng nhập số điện thoại!' }]}
+                                    rules={[
+                                        { required: true, message: 'Vui lòng nhập số điện thoại!' }
+                                        , { pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ!' }
+                                        , { len: 10, message: 'Số điện thoại phải có 10 chữ số!' }
+                                    ]}
                                 >
                                     <Input
                                         prefix={<PhoneOutlined className="site-form-item-icon" />}
                                         placeholder="Nhập số điện thoại của bạn"
+                                        maxLength={10}
                                     />
                                 </Form.Item>
                             </Col>
@@ -125,7 +130,19 @@ function Register() {
                                     name="password"
                                     rules={[
                                         { required: true, message: 'Vui lòng nhập mật khẩu!' },
-                                        { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' }
+                                        { min: 6, message: 'Mật khẩu phải có ít nhất 6 ký tự!' },
+                                        {
+                                            pattern: /[A-Z]/,
+                                            message: 'Mật khẩu phải chứa ít nhất một chữ hoa!',
+                                        },
+                                        {
+                                            pattern: /[0-9]/,
+                                            message: 'Mật khẩu phải chứa ít nhất một số!',
+                                        },
+                                        {
+                                            pattern: /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/,
+                                            message: 'Mật khẩu phải chứa ít nhất một ký tự đặc biệt!',
+                                        },
                                     ]}
                                 >
                                     <Input.Password

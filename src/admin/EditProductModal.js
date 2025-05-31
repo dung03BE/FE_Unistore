@@ -18,6 +18,7 @@ import { PlusOutlined, UploadOutlined } from "@ant-design/icons";
 import { updateProduct } from "../services/productService";
 import "../admin/AddProductModal.scss"; // import file CSS tùy chỉnh
 import { BASE_URL } from "../config";
+
 const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
     const [form] = Form.useForm();
     const [loading, setLoading] = useState(false);
@@ -25,6 +26,9 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
     const [colorInputVisible, setColorInputVisible] = useState(false);
     const [colorInputValue, setColorInputValue] = useState("");
     const [colors, setColors] = useState([]);
+    // State to store the URLs of uploaded images
+    const [uploadedImageUrls, setUploadedImageUrls] = useState([]);
+
 
     useEffect(() => {
         if (product) {
@@ -36,7 +40,7 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                 discount: product.discount,
                 brand: product.brand,
                 model: product.model,
-                availble: product.availble,
+                available: product.available, // Sửa từ availble thành available để phù hợp với backend
                 screen_size: product.details?.screen_size,
                 resolution: product.details?.resolution,
                 processor: product.details?.processor,
@@ -50,45 +54,97 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                 sim: product.details?.sim,
                 network: product.details?.network,
             });
-            setColors(product.colors?.map(color => color.color || color) || []);
-            setFileList(product.thumbnails?.map(thumbnail => ({
-                uid: thumbnail.id,
-                name: thumbnail.imageUrl,
+            setColors(product.colors?.map(color => typeof color === 'string' ? color : color.color) || []);
+            // Initialize fileList with existing product images
+            const existingImages = product.images?.map(image => ({
+                uid: image.id || Math.random().toString(36).substring(7), // Use a unique ID
+                name: image.imageUrl.substring(image.imageUrl.lastIndexOf('/') + 1), // Extract file name
                 status: 'done',
-                url: `${thumbnail.imageUrl}`,
-            })) || []);
+                url: image.imageUrl,
+            })) || [];
+            setFileList(existingImages);
+            // Initialize uploadedImageUrls with existing product images
+            setUploadedImageUrls(existingImages.map(img => img.url));
         }
     }, [product, form]);
 
-    // These functions remain for display purposes but won't update the data
     const handleColorInputChange = (e) => {
         setColorInputValue(e.target.value);
     };
 
     const handleColorInputConfirm = () => {
+        if (colorInputValue && colors.indexOf(colorInputValue) === -1) {
+            setColors([...colors, colorInputValue]);
+        }
         setColorInputVisible(false);
         setColorInputValue("");
-        // Not updating colors anymore
     };
 
     const handleRemoveColor = (removedColor) => {
-        // Not removing colors anymore
-        setColorInputVisible(false);
+        const updatedColors = colors.filter(color => color !== removedColor);
+        setColors(updatedColors);
     };
 
-    const normFile = (e) => {
-        if (Array.isArray(e)) {
-            return e;
+    // --- Image Upload Logic ---
+    const handleUploadChange = ({ file, fileList: newFileList }) => {
+        setFileList(newFileList);
+
+        if (file.status === 'done') {
+            // Add the URL from the upload response to uploadedImageUrls
+            setUploadedImageUrls(prevUrls => [...prevUrls, file.response.url]);
+            notification.success({
+                message: "Upload thành công",
+                description: `${file.name} đã được tải lên.`,
+            });
+        } else if (file.status === 'error') {
+            notification.error({
+                message: "Upload thất bại",
+                description: `${file.name} tải lên không thành công.`,
+            });
         }
-        return e?.fileList;
     };
+
+    const handleRemoveImage = (file) => {
+        // Remove the URL from uploadedImageUrls when an image is removed from the list
+        setUploadedImageUrls(prevUrls => prevUrls.filter(url => url !== file.url));
+    };
+
+    // Custom request to upload images to your backend / Cloudinary
+    const customUploadRequest = async ({ file, onSuccess, onError }) => {
+        const formData = new FormData();
+        formData.append('file', file); // 'file' is the key your backend expects
+
+        try {
+            const response = await fetch(`${BASE_URL}/api/upload`, { // Your upload endpoint
+                method: 'POST',
+                body: formData,
+                // Add any necessary headers like Authorization if your upload API requires it
+                // headers: {
+                //    'Authorization': `Bearer ${yourAuthToken}`
+                // }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                // Assuming your upload API returns a JSON object with a 'url' field
+                onSuccess({ url: data.url, name: file.name, status: 'done' }, file);
+            } else {
+                const errorData = await response.json();
+                onError(new Error(errorData.message || 'Upload failed'));
+            }
+        } catch (error) {
+            console.error("Upload error:", error);
+            onError(error);
+        }
+    };
+    // --- End Image Upload Logic ---
+
 
     const handleSubmit = async () => {
         try {
             setLoading(true);
             const values = await form.validateFields();
 
-            // Format the product data - exclude colors
             const productData = {
                 name: values.name,
                 price: values.price,
@@ -97,8 +153,10 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                 discount: values.discount || 0,
                 brand: values.brand,
                 model: values.model,
-                availble: values.availble === undefined ? 1 : values.availble,
-                // Removed colors from update
+                available: values.available === undefined ? 1 : values.available,
+                colors: colors,
+                // Send the collected image URLs to the backend
+                images: uploadedImageUrls,
                 details: {
                     screen_size: values.screen_size,
                     resolution: values.resolution,
@@ -115,7 +173,6 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                 },
             };
 
-            // Update the product without colors and images
             const result = await updateProduct(product.id, productData);
 
             notification.success({
@@ -123,16 +180,17 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                 description: "Sản phẩm đã được cập nhật thành công",
             });
 
-            // Reset form and state
             form.resetFields();
-            // Not resetting colors and fileList since we're only displaying them
+            setColors([]);
+            setFileList([]);
+            setUploadedImageUrls([]); // Clear uploaded image URLs
 
             if (onOk) onOk();
             onCancel();
         } catch (error) {
             notification.error({
                 message: "Lỗi",
-                description: "Không thể cập nhật sản phẩm. Vui lòng thử lại.",
+                description: error.message || "Không thể cập nhật sản phẩm. Vui lòng thử lại.",
             });
             console.error("Error updating product:", error);
         } finally {
@@ -158,14 +216,18 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
             ]}
         >
             <div className="modal-content">
-                <Form form={form} layout="vertical" name="add_product_form" initialValues={{ availble: 1 }}>
+                <Form form={form} layout="vertical" name="edit_product_form" initialValues={{ available: 1 }}>
                     <Divider orientation="left">Thông tin cơ bản</Divider>
                     <Row gutter={16}>
                         <Col span={12}>
                             <Form.Item
                                 name="name"
                                 label="Tên sản phẩm"
-                                rules={[{ required: true, message: "Vui lòng nhập tên sản phẩm" }]}
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập tên sản phẩm" },
+                                    { min: 3, message: "Tên sản phẩm phải có ít nhất 3 ký tự" },
+                                    { max: 200, message: "Tên sản phẩm không được quá 200 ký tự" },
+                                ]}
                             >
                                 <Input />
                             </Form.Item>
@@ -174,7 +236,26 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                             <Form.Item
                                 name="price"
                                 label="Giá (VNĐ)"
-                                rules={[{ required: true, message: "Vui lòng nhập giá sản phẩm" }]}
+                                rules={[
+                                    { required: true, message: "Vui lòng nhập giá sản phẩm" },
+                                    // Custom validator để kiểm tra giá trị số sau khi đã được parser
+                                    {
+                                        validator: async (_, value) => {
+
+                                            const numValue = Number(value); // Đảm bảo giá trị là số
+                                            if (isNaN(numValue)) {
+                                                return Promise.reject(new Error('Giá phải là một số hợp lệ!'));
+                                            }
+                                            if (numValue <= 0) {
+                                                return Promise.reject(new Error('Giá sản phẩm phải lớn hơn 0'));
+                                            }
+                                            if (numValue > 1000000000) {
+                                                return Promise.reject(new Error('Giá sản phẩm không được vượt quá 1 tỷ'));
+                                            }
+                                            return Promise.resolve();
+                                        },
+                                    },
+                                ]}
                             >
                                 <InputNumber
                                     style={{ width: "100%" }}
@@ -218,7 +299,7 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                             </Form.Item>
                         </Col>
                         <Col span={8}>
-                            <Form.Item name="availble" label="Trạng thái">
+                            <Form.Item name="available" label="Trạng thái">
                                 <Select>
                                     <Select.Option value={1}>Còn hàng</Select.Option>
                                     <Select.Option value={0}>Hết hàng</Select.Option>
@@ -248,8 +329,8 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                         </Col>
                     </Row>
 
-                    {/* Display colors but don't allow adding/removing */}
-                    <Form.Item label="Màu sắc ">
+                    {/* Màu sắc - cho phép thêm/xóa */}
+                    <Form.Item label="Màu sắc">
                         <Space style={{ flexWrap: "wrap" }}>
                             {colors.map((color) => (
                                 <Tag
@@ -353,21 +434,26 @@ const EditProductModal = ({ visible, onCancel, onOk, categories, product }) => {
                         </Col>
                     </Row>
 
-                    {/* Display images but don't allow updating */}
+                    {/* Hình ảnh - cho phép cập nhật */}
                     <Form.Item
-                        label="Hình ảnh "
+                        label="Hình ảnh"
+                        valuePropName="fileList"
+                        getValueFromEvent={e => e.fileList} // This is important for Ant Design Form.Item with Upload
                     >
                         <Upload
                             listType="picture-card"
                             fileList={fileList}
-                            beforeUpload={() => false}
-                            onChange={() => { }} // Empty function to prevent actual changes
-                            disabled={true}
+                            customRequest={customUploadRequest} // Use your custom upload function
+                            onChange={handleUploadChange}
+                            onRemove={handleRemoveImage} // Handle image removal
+                            accept="image/*" // Restrict to image files
                         >
-                            <div>
-                                <UploadOutlined />
-                                <div style={{ marginTop: 8 }}>Hiển thị ảnh</div>
-                            </div>
+                            {fileList.length < 8 && ( // Limit to 8 images, adjust as needed
+                                <div>
+                                    <PlusOutlined />
+                                    <div style={{ marginTop: 8 }}>Tải ảnh lên</div>
+                                </div>
+                            )}
                         </Upload>
                     </Form.Item>
                 </Form>

@@ -32,8 +32,7 @@ function ProductList() {
     const [activeCollapseKeys, setActiveCollapseKeys] = useState([]);
     const [addModalVisible, setAddModalVisible] = useState(false);
     const navigate = useNavigate();
-    // Hard-coded categories for now
-    // In a real application, you'd fetch these from an API
+
     const fetchedCategories = [
         { id: 1, name: "SamSung" },
         { id: 2, name: "Apple" },
@@ -81,14 +80,14 @@ function ProductList() {
         setLoading(true);
         setCategories(fetchedCategories);
 
-        // Initialize current page for each category
+
         const initialCurrentPageMap = {};
         fetchedCategories.forEach(category => {
             initialCurrentPageMap[category.id] = 1;
         });
         setCurrentPageMap(initialCurrentPageMap);
 
-        // Fetch products for each category
+
         const fetchPromises = fetchedCategories.map(category =>
             fetchCategoryProducts(category.id, 0)
         );
@@ -215,10 +214,42 @@ function ProductList() {
             title: "Màu sắc",
             dataIndex: "colors",
             key: "colors",
-            render: (colors) =>
-                colors && colors.length > 0
-                    ? colors.map((color) => color.color || color).join(" / ")
-                    : "Không có màu",
+            render: (colors) => {
+                console.log('Mảng colors hiện tại:', colors);
+
+                if (colors && colors.length > 0) {
+                    return colors.map((colorItem, index) => {
+                        const colorText = colorItem?.color || colorItem;
+                        const colorId = colorItem?.id;
+
+                        return (
+                            <span key={index}>
+                                {colorId ? (
+                                    <Tooltip
+                                        title={`ID: ${colorId}`}
+                                        mouseEnterDelay={0.1}
+                                        placement="top"
+                                    >
+                                        <span
+                                            style={{
+                                                cursor: 'help',
+                                                borderBottom: '1px dotted #1890ff',
+                                                color: '#1890ff'
+                                            }}
+                                        >
+                                            {colorText}
+                                        </span>
+                                    </Tooltip>
+                                ) : (
+                                    <span>{colorText}</span>
+                                )}
+                                {index < colors.length - 1 && ' / '}
+                            </span>
+                        );
+                    });
+                }
+                return "Không có màu";
+            },
         },
         {
             title: "Thao tác",

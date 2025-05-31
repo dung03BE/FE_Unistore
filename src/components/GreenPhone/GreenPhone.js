@@ -85,7 +85,7 @@ function GreenPhone() {
         }
     };
     const openGoogleForm = () => {
-        window.open('https://www.facebook.com/hoahocthatdongian/posts/1066908996757911/', '_blank'); // Thay thế YOUR_GOOGLE_FORM_URL bằng URL form Google của bạn
+        window.open('https://docs.google.com/forms/d/e/1FAIpQLSdEy7vCDxkrGWtBClp9qRVv54gyPSib_sVTUBiyAeYPsXWnqg/viewform', '_blank'); // Thay thế YOUR_GOOGLE_FORM_URL bằng URL form Google của bạn
     };
     const handleCancel = () => {
         setIsModalVisible(false);

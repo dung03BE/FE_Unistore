@@ -8,6 +8,7 @@ import {
     Pagination,
     notification,
     Collapse,
+    Tooltip,
 } from "antd";
 import "../admin/ProductList.scss";
 import Search from "antd/es/transfer/search";

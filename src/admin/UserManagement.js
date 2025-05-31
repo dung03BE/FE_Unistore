@@ -6,7 +6,6 @@ import { postUserApi } from '../services/userService';
 import ReCAPTCHA from 'react-google-recaptcha';
 const { Option } = Select;
 import { BASE_URL } from "../config";
-import { width } from '@fortawesome/free-brands-svg-icons/fa42Group';
 const roleNames = {
     1: 'Admin',
     2: 'User',

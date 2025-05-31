@@ -196,7 +196,7 @@ function Login() {
                 align="center"
                 sx={{ mb: 3 }}
               >
-                Welcome to Chis Tech Meets You
+                Chào mừng đến với hệ thống của chúng tôi!
               </Typography>
 
               <Box

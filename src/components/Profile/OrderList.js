@@ -1,8 +1,8 @@
-// OrderList.js
 import React, { useState, useEffect } from 'react';
 import { getOrderByUserId } from '../../services/paymentService';
-import { Collapse, Badge } from 'antd'; // Import Badge
+import { Collapse, Badge, Modal, message } from 'antd'; // Import Modal và message
 import { useNavigate } from 'react-router-dom';
+import { putStatusOrderByUser } from '../../services/orderService';
 const { Panel } = Collapse;
 
 export const OrderList = () => {
@@ -12,38 +12,39 @@ export const OrderList = () => {
     const [error, setError] = useState(null);
     const [searchKeyword, setSearchKeyword] = useState('');
     const [filterStatus, setFilterStatus] = useState('Tất cả');
-    const [statusCounts, setStatusCounts] = useState({}); // State to store counts
+    const [statusCounts, setStatusCounts] = useState({});
     const navigate = useNavigate();
-    useEffect(() => {
-        const fetchOrders = async () => {
-            try {
-                const response = await getOrderByUserId();
-                if (response) {
-                    console.log("Order la:", response);
-                    const convertedOrders = response.map(order => ({
-                        ...order,
-                        statusDisplay: convertStatus(order.status),
-                        paymentStatusDisplay: convertPaymentStatus(order.payment_status)
-                    }));
-                    setOrders(convertedOrders);
-                } else {
-                    setError("Không thể lấy dữ liệu đơn hàng.");
-                }
-            } catch (err) {
-                setError("Lỗi khi lấy dữ liệu đơn hàng.");
-                console.error("Lỗi fetchOrders:", err);
-            } finally {
-                setLoading(false);
-            }
-        };
 
+    useEffect(() => {
         fetchOrders();
     }, []);
 
     useEffect(() => {
         filterOrders();
-        updateStatusCounts(); // Update counts when orders change
+        updateStatusCounts();
     }, [orders, searchKeyword, filterStatus]);
+
+    const fetchOrders = async () => {
+        try {
+            const response = await getOrderByUserId();
+            if (response) {
+                console.log("Order la:", response);
+                const convertedOrders = response.map(order => ({
+                    ...order,
+                    statusDisplay: convertStatus(order.status),
+                    paymentStatusDisplay: convertPaymentStatus(order.payment_status)
+                }));
+                setOrders(convertedOrders);
+            } else {
+                setError("Không thể lấy dữ liệu đơn hàng.");
+            }
+        } catch (err) {
+            setError("Lỗi khi lấy dữ liệu đơn hàng.");
+            console.error("Lỗi fetchOrders:", err);
+        } finally {
+            setLoading(false);
+        }
+    };
 
     const convertStatus = (status) => {
         switch (status) {
@@ -57,10 +58,13 @@ export const OrderList = () => {
                 return 'Chờ xác nhận';
             case 'cancelled':
                 return 'Đã hủy';
+            case 'returned':
+                return 'Trả hàng';
             default:
                 return status;
         }
     };
+
     const convertPaymentStatus = (paymentStatus) => {
         switch (paymentStatus) {
             case 'SUCCESS':
@@ -71,6 +75,7 @@ export const OrderList = () => {
                 return paymentStatus;
         }
     };
+
     const filterOrders = () => {
         let filtered = orders;
 
@@ -106,6 +111,30 @@ export const OrderList = () => {
         setStatusCounts(counts);
     };
 
+    const handleCancelOrder = (orderId) => {
+        Modal.confirm({
+            title: 'Xác nhận hủy đơn hàng',
+            content: 'Bạn có chắc chắn muốn hủy đơn hàng này không? Hành động này không thể hoàn tác.',
+            okText: 'Hủy đơn hàng',
+            okButtonProps: { danger: true },
+            cancelText: 'Không',
+            onOk: async () => {
+                try {
+                    await putStatusOrderByUser(orderId, 'cancelled'); // Gửi 'cancelled' lên server
+                    message.success('Đơn hàng đã được hủy thành công!');
+                    fetchOrders(); // Lấy lại danh sách đơn hàng để cập nhật UI
+                } catch (err) {
+                    message.error('Có lỗi xảy ra khi hủy đơn hàng. Vui lòng thử lại.');
+                    console.error("Lỗi khi hủy đơn hàng:", err);
+                }
+            },
+        });
+    };
+
+    const handleViewProductDetail = (productId) => {
+        navigate(`/product/${productId}`);
+    };
+
     if (loading) {
         return <div>Đang tải danh sách đơn hàng...</div>;
     }
@@ -113,9 +142,7 @@ export const OrderList = () => {
     if (error) {
         return <div>{error}</div>;
     }
-    const handleViewProductDetail = (productId) => {
-        navigate(`/product/${productId}`);
-    };
+
     return (
         <div>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
@@ -123,7 +150,7 @@ export const OrderList = () => {
                 <div style={{ display: 'flex', alignItems: 'center' }}>
                     <input
                         type="text"
-                        placeholder="Tìm theo tên đơn, mã đơn hoặc tên sản phẩm"
+                        placeholder="Tìm theo tên sản phẩm"
                         value={searchKeyword}
                         onChange={handleSearchChange}
                         style={{ padding: '8px', marginRight: '10px' }}
@@ -189,12 +216,30 @@ export const OrderList = () => {
                                         }}
                                         style={{ marginLeft: '10px', color: 'blue', textDecoration: 'underline', cursor: 'pointer' }}
                                     >
-
                                         Xem chi tiết sản phẩm
                                     </a>
                                 </li>
                             ))}
                         </ul>
+
+                        {/* Thêm nút "Hủy đơn hàng" chỉ khi trạng thái là 'pending' */}
+                        {order.status === 'pending' && (
+                            <div style={{ marginTop: '15px', textAlign: 'right' }}>
+                                <button
+                                    onClick={() => handleCancelOrder(order.id)}
+                                    style={{
+                                        padding: '8px 16px',
+                                        backgroundColor: '#f44336', // Màu đỏ cho nút hủy
+                                        color: 'white',
+                                        border: 'none',
+                                        borderRadius: '4px',
+                                        cursor: 'pointer',
+                                    }}
+                                >
+                                    Hủy đơn hàng
+                                </button>
+                            </div>
+                        )}
                     </Panel>
                 ))}
             </Collapse>

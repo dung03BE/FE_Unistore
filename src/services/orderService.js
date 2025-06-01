@@ -51,3 +51,13 @@ export const getOrderById = async (orderId) => {
         throw error;
     }
 };
+export const putStatusOrderByUser = async (id, status) => {
+    const path = `orders/checkout/status/${id}`;
+    try {
+        const result = await putAuth(path, { status });
+        return result;
+    } catch (error) {
+        console.error("Lỗi khi cập nhật trạng thái đơn hàng:", error);
+        throw error; // Re-throw lỗi để component có thể xử lý
+    }
+};
